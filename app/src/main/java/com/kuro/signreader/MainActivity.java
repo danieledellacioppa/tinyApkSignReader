@@ -45,7 +45,12 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 try {
                     PackageManager packageManager = getPackageManager();
-                    PackageInfo packageInfo = packageManager.getPackageInfo(appPkg.getText().toString(), PackageManager.GET_SIGNATURES);
+                    String pkgName = appPkg.getText() != null ? appPkg.getText().toString().trim() : "";
+                    if (pkgName.isEmpty()) {
+                        Toast.makeText(MainActivity.this, "Package name required", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    PackageInfo packageInfo = packageManager.getPackageInfo(pkgName, PackageManager.GET_SIGNATURES);
 
                     Signature[] signatures = packageInfo.signatures;
 
@@ -85,7 +90,12 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 try {
-                    String path = appPkg.getText().toString() + "_signatures.txt";
+                    String pkgName = appPkg.getText() != null ? appPkg.getText().toString().trim() : "";
+                    if (pkgName.isEmpty()) {
+                        Toast.makeText(MainActivity.this, "Package name required", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    String path = pkgName + "_signatures.txt";
                     StringBuilder sb = new StringBuilder();
                     sb.append(resultBase64.getText().toString() + "\n");
                     sb.append(resultCpp.getText().toString() + "\n");
