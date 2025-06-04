@@ -8,6 +8,7 @@ import android.content.pm.Signature;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+
+import com.xbh.sdk3.System.SystemHelper;
+import com.xbh.sdk3.client.UserAPI;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -30,6 +34,13 @@ public class MainActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+
+        UserAPI.getInstance().init(this);
+
+        SystemHelper systemHelper = new SystemHelper();
+        Log.d("SystemHelper", "Executing command: whoami");
+
+        Log.d("SystemHelper", "Output: " + systemHelper.executeCommand("whoami"));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
