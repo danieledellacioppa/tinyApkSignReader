@@ -106,18 +106,27 @@ public class MainActivity extends Activity {
                         Toast.makeText(MainActivity.this, "Package name required", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    String path = pkgName + "_signatures.txt";
-                    StringBuilder sb = new StringBuilder();
-                    sb.append(resultBase64.getText().toString() + "\n");
-                    sb.append(resultCpp.getText().toString() + "\n");
-                    FileOutputStream fos = new FileOutputStream(new File("/sdcard", path));
-                    fos.write(sb.toString().getBytes());
-                    fos.close();
+
+                    String path = "/sdcard/" + pkgName + "_signatures.txt";
+
+                    String content = resultBase64.getText().toString() + "\n" + resultCpp.getText().toString();
+
+                    // Escapa i caratteri speciali per la shell (come " e $)
+                    String safeContent = content.replace("\"", "\\\"").replace("$", "\\$");
+
+                    SystemHelper helper = new SystemHelper();
+                    String command = "echo \"" + safeContent + "\" > \"" + path + "\"";
+
+                    String output = helper.executeCommand(command);
+                    Log.d("SystemHelper", "Write output: " + output);
+
                     Toast.makeText(MainActivity.this, "Saved to " + path, Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Toast.makeText(MainActivity.this, "Error saving file", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
     }
 }
